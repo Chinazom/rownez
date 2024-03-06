@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "daxland-hotel",
+  "private_key_id": "4a3ee4e5807616b9889ea7dcb20a5e0309ea74bc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCxysOH4hjspPDI\nny1M55e/MiPBmKb+x24l6Y2+GqG7dGmvWKye87ProEQsGvDJvlMtKFoK7CTwAzXO\nlNOgQy+tPmZhUQLsux/4pI0FiHYXPyWhhjLt51ngTpwzTFqssoCQlXIhzEVG+Jau\naxi4NIOt3d5jAtjsRuG5863BU6ggDPK2jEIHL7rwe1CQAScBFKXUds9uTuhGYDh4\nvkk1fg6ubg8N6adJTB+Ew/apjYabxjWhAd9zEw5Sri9vxju34qQT7l5n8Hv/eUMR\n6YSFq52utRhv6p6H//3I85Wf24MsLp2dgXu9Mc0aIl2xOLRvSnyHM26dSkygECrw\nuZXHdUq1AgMBAAECggEAAO2D87OUWbfKoeFixSH4QsEqOppnVLEJvBzp5nIRIf9L\nheS6keHHsJUXhftmAkeB+5xYS/JLhw0dPMS+DfoLx6WptxxLHZ0kX5HMQpkhtKFZ\nuuwOW/t3FpqSahod5wTPcvG0tMRyIBqv/p0EdgGgJkogHPgo1aLRDr1czMN4/yHP\n7roVm+vyBYq0M0D1JRoI+ATitlPDYEJrKJkHpeDmuolkU6W+Wci7p8PGTDGgCLNH\nl6oEPNi4nWJ8X65Zk/XbnpI8AEIvdOb8yuBjWrKDKjjGfX//3vAswVf/avlur1M6\nyLH6VGwoopVKjDjQGUwRWii6GXiMcajtnujYeGcJgQKBgQDmZs9hIK32Lo3L+uGg\nvLAJPiKsP24gXYDJ1WvRfHcLY9oWwF6oiC66Xu94Eldi4mQx60fZDT5jnJzqjU1u\ngx8Y1v7bIqnyv6Ar0B67BKCp/XFtRyEni0mbo8RzgoUco7EFs+2yUirqsv6PQled\nfNbcN9ySOzTG1o+Hmk50Ud8SZQKBgQDFi5uw/UvqkXpvp7fthWGQkfJHs8MPwJsA\nlzRXmqy72jUCASOywcz4/Faxg86rtucI/eEFwG9E1K6kkpXM+U2W5LexT52UaW8G\n5Bb3GdgnimKS///Umd8Irln6doaP4mERO1iiMcW37e6P6517KzdB0wXTQKnL/l6+\naAjJsdaqEQKBgQCYfvnJrqiVpdCCbyZBjkHxjCfE3CLW1yxz6od3Wysr5cYmguLk\nJ2bOQiG71l/yeieZBsJCPkrKAZG2iRn0CGNfvIVoozPbEMxB03lTjUeN28rkakze\ncImisy1Gyt+xygJT5Phxq4LuXtSwG1gES+mmTm72dquC4+aR+SbuRHYiJQKBgQCP\nSq9KeNGCergnGa9u2RtmNJdbr2dEm99TVFqhWQ8GzEc7BvyQA8fcq51u8j8Ni4SW\nnyGEfIu5j9SGh9Wlcwj29TzRnwCc0MW6Z+TIpLSIKfdKzesSmfKQZ3fZF/SPlhP2\n3edy70uOGUa8mpoG59gTJTDKhdMkp4St9OS6+QbPIQKBgEe4dLQrutv4683IlJrx\ntp0FfNsH+k6jLM0SQJZfWYvCLWe5KfdNCrCKvBWiBZV6Y9scynU2MM1GwZJqejNA\nVRy1tNLP8xN1elENhdq49cXjy4y4hcFNRl81m8FCkQ6mET79Q1DNcWo+EpS8RGwP\nW+n31fsPpTu1O1NOaBXOzLhr\n-----END PRIVATE KEY-----\n",
+  "client_email": "rownez-hotel-service-account@daxland-hotel.iam.gserviceaccount.com",
+  "client_id": "112304988854790654205",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/rownez-hotel-service-account%40daxland-hotel.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

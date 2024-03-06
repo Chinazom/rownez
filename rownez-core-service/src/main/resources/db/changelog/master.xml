@@ -1,0 +1,9 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="classpath:db/changelog/liquibase/init_room_table.xml" />
+    <include file="classpath:db/changelog/liquibase/init_laundry_item.xml" />
+    <include file="classpath:db/changelog/liquibase/laundry_item_load.sql"/>
+    <include file="classpath:db/changelog/liquibase/init_schema_checkin.xml"/>
+</databaseChangeLog>

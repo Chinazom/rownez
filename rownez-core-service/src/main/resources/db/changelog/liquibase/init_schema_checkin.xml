@@ -1,0 +1,38 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--Added the entity room-->
+    <changeSet id="2024031951" author="chinazom.nnoli">
+        <createTable tableName="CHECK_IN">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"  />
+            </column>
+            <column name="ROOM_NUMBER" type="varchar(256)">
+                <constraints nullable="false" />
+            </column>
+            <column name="GUEST_NAME" type="varchar(256)">
+            </column>
+            <column name="PHONE_NUMBER" type="varchar(256)">
+            </column>
+            <column name="EMAIL" type="varchar(256)">
+            </column>
+            <column name="NUMBER_OF_GUEST" type="varchar(256)"/>
+            <column name="CHECK_IN_DATE" type="datetime">
+            <constraints nullable="false"/>
+        </column>
+            <column name="CHECK_OUT_DATE" type="datetime"/>
+            <column name="CHECK_IN_AGENT" type="varchar(256)"/>
+            <column name="CHECK_OUT_AGENT" type="varchar(256)"/>
+            <column name="AMOUNT_PAID" type="double"/>
+            <column name="NUMBER_OF_NIGHT" type="int"/>
+        </createTable>
+        <createTable tableName="ROOM_TO_CHECK_IN_MAP">
+            <column name="CHECK_IN_ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ROOM_NUMBER" type="varchar(256)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
