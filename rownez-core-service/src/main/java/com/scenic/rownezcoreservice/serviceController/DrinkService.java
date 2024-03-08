@@ -30,8 +30,11 @@ public class DrinkService {
             throw new ApiException("Drink menu cannot be empty", HttpStatus.BAD_REQUEST);
         }
         for (DrinkDTO drinkDTO: drinkDTOs) {
-            Drink drink = new Drink(drinkDTO.getName(), drinkDTO.getPrice(),drinkDTO.getCategory());
-            drinkRepository.save(drink);
+            Optional<Drink> drink = drinkRepository.findByName(drinkDTO.getName());
+            if(drink.isPresent()){
+                throw new ApiException("Food item already exist please",HttpStatus.BAD_REQUEST);
+            }
+            drinkRepository.save(new Drink(drinkDTO.getName(), drinkDTO.getPrice(),drinkDTO.getCategory()));
         }
     }
 
