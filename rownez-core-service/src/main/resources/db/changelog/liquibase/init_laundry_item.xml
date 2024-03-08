@@ -12,11 +12,16 @@
             </column>
         </createTable>
         <createTable tableName="LAUNDRY_CART">
+            <column name="ID" type="UUID">
+                <constraints primaryKey="true" nullable="false"  />
+            </column>
             <column name="ROOM_NUMBER" type="varchar(255)">
-                <constraints primaryKey="true" nullable="false" />
+                <constraints nullable="false" />
             </column>
             <column name="ITEMS" type="varchar(255)">
                 <constraints nullable="false" />
+            </column>
+            <column name="TOTAL" type="double">
             </column>
             <!--<column name="EXPRESS_SERVICE" type="boolean">
                 <constraints nullable="false" />

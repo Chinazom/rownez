@@ -2,11 +2,8 @@ package com.scenic.rownezcoreservice.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.List;
+import javax.persistence.*;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,12 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 public class LaundryCart {
     @Id
-    @Column(name = "room_number",nullable = false)
+    @Column(name = "ID",nullable = false)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+    @Column(name = "ROOM_NUMBER",nullable = false)
     private String roomNumber;
-    @Column(name = "items",nullable = false)
+    @Column(name = "ITEMS",nullable = false)
     String items;
+    @Column(name = "TOTAL")
+    double laundryCartTotal;
     /*@Column(name = "express_service",nullable = false)
     private boolean expressService;*/
-
-
 }

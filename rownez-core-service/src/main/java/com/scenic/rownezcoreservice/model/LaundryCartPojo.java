@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 public class LaundryCartPojo {
     List<String> items;
+    double laundryTotal;
     private boolean expressService;
 
 

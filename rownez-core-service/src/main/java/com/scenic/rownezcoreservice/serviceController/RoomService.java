@@ -69,13 +69,14 @@ public class RoomService {
             throw new ApiException( "check that the number of rooms correspond to number of names provided", HttpStatus.BAD_REQUEST);
         }
         String roomImageDirectory = "room-images" + "/" + category.name().toLowerCase();
-        for (MultipartFile file:  files){
+        // enable this when the Google cloud billing is sorting
+        /*for (MultipartFile file:  files){
             try {
                 fileStorage.uploadFile(file, category.name().toLowerCase());
             } catch (FileStorageServiceException e) {
                 throw new ApiException(e.getMessage(), HttpStatus.BAD_REQUEST);
             }
-        }
+        }*/
         nameOfRoomsList.forEach(name -> {
             Optional<Room> existingRoom = roomRepo.findById(name);
             if (existingRoom.isPresent()){
@@ -91,6 +92,7 @@ public class RoomService {
         nameOfRoomsList.forEach(name -> {
             Room existingRoom =roomRepo.findById(name).orElseThrow(() -> new ApiException("The room number does not exist", HttpStatus.NOT_FOUND));
             //check if file is present to upload by first deleting the existing images
+            /* enable this when the Google cloud billing is sorting
             if (files != null){
                 //delete old images
                 fileStorage.delFile(existingRoom.getStoragePath());
@@ -102,7 +104,7 @@ public class RoomService {
                     }
                 }
                 existingRoom.setStoragePath("room-images" + "/" + category);
-            }
+            }*/
             if (numOfPeople != 0){
                 existingRoom.setCapacity(numOfPeople);
             }

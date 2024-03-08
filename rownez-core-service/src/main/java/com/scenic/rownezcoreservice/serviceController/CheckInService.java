@@ -109,7 +109,8 @@ public class CheckInService {
     }
 
     // update the rooms to be cleaned
-    @Scheduled(cron = "0/10 * * * * *")
+   // @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0 0/20 * * * *")
     protected void setRoomsToBeCleaned (){
         logger.info("Fetching room to be cleaned");
         roomToBeCleanedRepo.deleteAll();

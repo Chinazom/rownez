@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface LaundryCartRepo extends CrudRepository<LaundryCart, String> {
+import java.util.UUID;
+
+public interface LaundryCartRepo extends CrudRepository<LaundryCart, UUID> {
     @Modifying
-    @Query("UPDATE LaundryCart cart SET cart.items =:items WHERE cart.roomNumber = :roomNumber")
-    void updateByItemsAndRoomNumber (String items, String roomNumber);
+    @Query("UPDATE LaundryCart cart SET cart.items =:items , cart.laundryCartTotal =:total WHERE cart.roomNumber = :roomNumber")
+    void updateByItemsAndRoomNumber (String items, double total, String roomNumber);
 }
