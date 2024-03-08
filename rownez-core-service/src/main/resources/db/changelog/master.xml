@@ -6,4 +6,6 @@
     <include file="classpath:db/changelog/liquibase/init_laundry_item.xml" />
     <include file="classpath:db/changelog/liquibase/laundry_item_load.sql"/>
     <include file="classpath:db/changelog/liquibase/init_schema_checkin.xml"/>
+    <include file="classpath:db/changelog/liquibase/food.changelog.xml"/>
+    <include file="classpath:db/changelog/liquibase/drink.changelog.xml"/>
 </databaseChangeLog>

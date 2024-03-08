@@ -1,6 +1,5 @@
 package com.scenic.rownezcoreservice.controller;
 
-import com.scenic.rownezcoreservice.entity.Room;
 import com.scenic.rownezcoreservice.entity.RoomToBeCleaned;
 import com.scenic.rownezcoreservice.model.CheckInRequestDTO;
 import com.scenic.rownezcoreservice.serviceController.CheckInService;
