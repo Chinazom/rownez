@@ -2,7 +2,7 @@ package com.scenic.rownezcoreservice.controller;
 
 import com.scenic.rownezcoreservice.entity.RoomToBeCleaned;
 import com.scenic.rownezcoreservice.model.CheckInRequestDTO;
-import com.scenic.rownezcoreservice.serviceController.CheckInService;
+import com.scenic.rownezcoreservice.service_controller.CheckInService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;

@@ -1,11 +1,10 @@
-package com.scenic.rownezcoreservice.serviceController;
+package com.scenic.rownezcoreservice.service_controller;
 
 import com.scenic.rownezcoreservice.entity.Room;
 import com.scenic.rownezcoreservice.exception.ApiException;
 import com.scenic.rownezcoreservice.model.RoomCategory;
 import com.scenic.rownezcoreservice.model.RoomPOJO;
 import com.scenic.rownezcoreservice.repository.RoomRepo;
-import com.scenic.rownezcoreservice.service.FileStorageServiceException;
 import com.scenic.rownezcoreservice.service.GcpFileStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

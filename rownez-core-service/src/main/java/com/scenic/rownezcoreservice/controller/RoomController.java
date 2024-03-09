@@ -2,8 +2,7 @@ package com.scenic.rownezcoreservice.controller;
 
 import com.scenic.rownezcoreservice.entity.Room;
 import com.scenic.rownezcoreservice.model.RoomCategory;
-import com.scenic.rownezcoreservice.model.RoomPOJO;
-import com.scenic.rownezcoreservice.serviceController.RoomService;
+import com.scenic.rownezcoreservice.service_controller.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

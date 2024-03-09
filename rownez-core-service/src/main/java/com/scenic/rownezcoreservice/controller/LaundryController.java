@@ -4,7 +4,7 @@ import com.scenic.rownezcoreservice.entity.LaundryCart;
 import com.scenic.rownezcoreservice.entity.LaundryItem;
 import com.scenic.rownezcoreservice.model.ItemType;
 import com.scenic.rownezcoreservice.model.LaundryCartPojo;
-import com.scenic.rownezcoreservice.serviceController.LaundryService;
+import com.scenic.rownezcoreservice.service_controller.LaundryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@Tag(name = "Rownez compute core API")
+@Tag(name = "Laundry api")
 @RequestMapping("/laundry")
 public class LaundryController {
     private final LaundryService laundryService;

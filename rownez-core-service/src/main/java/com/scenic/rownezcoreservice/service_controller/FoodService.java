@@ -1,4 +1,4 @@
-package com.scenic.rownezcoreservice.serviceController;
+package com.scenic.rownezcoreservice.service_controller;
 
 import com.scenic.rownezcoreservice.entity.Food;
 import com.scenic.rownezcoreservice.exception.ApiException;

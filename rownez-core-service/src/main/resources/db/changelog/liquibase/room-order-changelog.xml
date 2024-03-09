@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="createRoomOrderTable" author="chinazom.nnoli">
+        <createTable tableName="room_order">
+            <column name="order_id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_total_price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="room_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_creation_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

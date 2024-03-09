@@ -1,4 +1,4 @@
-package com.scenic.rownezcoreservice.serviceController;
+package com.scenic.rownezcoreservice.service_controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
