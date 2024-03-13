@@ -27,6 +27,9 @@
             <column name="order_creation_date" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
+            <column name="CHECK_IN_ID" type="uuid">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

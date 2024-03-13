@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @Tag(name = "Laundry api")
@@ -60,8 +61,8 @@ public class LaundryController {
                     @ApiResponse(responseCode = "500", description = "internal server error"),
             })
     @PatchMapping("/room/{room-number}")
-    public ResponseEntity<String> updateLaundryToCart (@PathVariable(name = "room-number") String roomNumber, @RequestBody LaundryCartPojo cart){
-        laundryService.updateLaundryToCart(roomNumber, cart);
+    public ResponseEntity<String> updateLaundryToCart (@RequestParam UUID laundryOrderId, @RequestBody LaundryCartPojo cart){
+        laundryService.updateLaundryToCart(laundryOrderId, cart);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @Operation(summary = "Use this API to create/ add laundry cart for a room ",

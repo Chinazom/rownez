@@ -1,31 +1,31 @@
 package com.scenic.rownezcoreservice.controller;
 
-import com.scenic.rownezcoreservice.model.ItemOrder;
+import com.scenic.rownezcoreservice.entity.RoomOrder;
 import com.scenic.rownezcoreservice.model.OrderCategory;
 import com.scenic.rownezcoreservice.model.OrderRequestDTO;
-import com.scenic.rownezcoreservice.service_controller.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.scenic.rownezcoreservice.service_controller.RoomOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/menu/order")
 @Tag(name = "Order Controller", description = "Endpoints for managing orders")
 public class OrderController {
 
-    private final OrderService orderService;
+    private final RoomOrderService roomOrderService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(RoomOrderService roomOrderService) {
+        this.roomOrderService = roomOrderService;
     }
 
     @Operation(summary = "Place a new order")
@@ -35,14 +35,14 @@ public class OrderController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping()
-    public ResponseEntity<String> placeOrder(
+    public ResponseEntity<List<String>> placeOrder(
             @Parameter(description = "Request body containing order details")
             @RequestBody OrderRequestDTO orderRequestDTO) {
         try {
-            orderService.placeOrder(orderRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Order placed successfully");
+           List<String> orderIds = roomOrderService.placeOrder(orderRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderIds);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -52,14 +52,15 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "Order not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @GetMapping("/{orderId}")
-    public ResponseEntity<ItemOrder> getOrder(
+    @GetMapping("/{roomNumber}")
+    public ResponseEntity<List<RoomOrder>> getOrder(
             @Parameter(description = "ID of the order to retrieve", required = true)
-            @PathVariable UUID orderId,@Parameter(description = "which category the order is coming from", required = true)
+            @PathVariable String roomNumber,
+            @Parameter(description = "which category the order is coming from", required = true)
     @PathVariable OrderCategory category) {
-        ItemOrder itemOrder = orderService.getOrder(orderId,category);
-        if (itemOrder != null) {
-            return ResponseEntity.ok(itemOrder);
+        List<RoomOrder> roomOrderList= roomOrderService.getOrder(roomNumber);
+        if (roomOrderList != null) {
+            return ResponseEntity.ok(roomOrderList);
         }
         return ResponseEntity.notFound().build();
     }
@@ -70,13 +71,11 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "Order not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PutMapping("/{orderId}")
+    @PutMapping()
     public ResponseEntity<String> updateOrder(
-            @Parameter(description = "ID of the order to update", required = true)
-            @PathVariable UUID orderId,
-            @Parameter(description = "Request body containing updated order details")
+            @RequestParam List<String> orderIds,
             @RequestBody OrderRequestDTO orderRequestDTO) {
-        boolean updated = orderService.updateOrder(orderId, orderRequestDTO);
+        boolean updated = roomOrderService.updateOrder(orderRequestDTO,orderIds);
         if (updated) {
             return ResponseEntity.ok("Order updated successfully");
         }
@@ -89,12 +88,12 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "Order not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @DeleteMapping("/{orderId}")
+    @DeleteMapping("/{roomNumber}")
     public ResponseEntity<String> deleteOrder(
-            @Parameter(description = "ID of the order to delete", required = true)
-            @PathVariable UUID orderId, @Parameter(description = "which category the order is coming from", required = true)
+            @Parameter(description = "Room number of the order to delete", required = true)
+            @PathVariable String roomNumber, @Parameter(description = "which category the order is coming from", required = true)
     @PathVariable OrderCategory category) {
-        boolean deleted = orderService.deleteOrder(orderId,category);
+        boolean deleted = roomOrderService.deleteOrder(roomNumber);
         if (deleted) {
             return ResponseEntity.ok("Order deleted successfully");
         }

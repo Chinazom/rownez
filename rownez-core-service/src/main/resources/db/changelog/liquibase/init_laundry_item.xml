@@ -23,6 +23,9 @@
             </column>
             <column name="TOTAL" type="double">
             </column>
+            <column name="CHECK_IN_ID" type="uuid">
+                <constraints nullable="false"/>
+            </column>
             <!--<column name="EXPRESS_SERVICE" type="boolean">
                 <constraints nullable="false" />
             </column>-->

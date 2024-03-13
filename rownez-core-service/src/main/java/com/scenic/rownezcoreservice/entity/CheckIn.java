@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -40,6 +41,10 @@ public class CheckIn {
     private String receptionistNameCheckout;
     @Column(name = "NUMBER_OF_NIGHT", nullable = false)
     private int numOfNight;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "checkIn", cascade = CascadeType.ALL)
+    private List<RoomOrder> roomOrder;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "checkIn", cascade = CascadeType.ALL)
+    private List<LaundryCart> laundryCart;
 
 
     public CheckIn(Room roomNumber, String guestName, String phoneNumber, String email, int numberOfGuests,  double amountPaid, String receptionistNameCheckIn, int numOfNight) {

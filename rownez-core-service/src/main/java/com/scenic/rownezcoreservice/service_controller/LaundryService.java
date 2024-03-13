@@ -1,11 +1,7 @@
 package com.scenic.rownezcoreservice.service_controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.scenic.rownezcoreservice.entity.*;
 import com.scenic.rownezcoreservice.exception.ApiException;
-import com.scenic.rownezcoreservice.model.ItemPojo;
 import com.scenic.rownezcoreservice.model.ItemType;
 import com.scenic.rownezcoreservice.model.LaundryCartPojo;
 import com.scenic.rownezcoreservice.repository.*;
@@ -14,8 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class LaundryService {
@@ -25,6 +22,7 @@ public class LaundryService {
     private final LaundryCartRepo laundryCartRepo;
     private final RoomRepo roomRepo;
     private final RoomToCheckInMapRepo roomToCheckInMapRepo;
+    private final CheckInRepo checkInRepo;
 
     public Iterable<LaundryItem> getAllLaundries() {
         return laundryItemRepo.findAll();
@@ -38,42 +36,19 @@ public class LaundryService {
         laundryItemRepo.save(laundryItem.get());
     }
 
-    public void addLaundryToCart(String roomNumber, LaundryCartPojo cart) {
+    public String addLaundryToCart(String roomNumber, LaundryCartPojo cart) {
         Room room =roomRepo.findById(roomNumber).orElseThrow(() -> new ApiException(ROOM_NUMBER_DOES_NOT_EXIST, HttpStatus.NOT_FOUND));
         // check for existing check in details
         RoomToCheckInMap roomToCheckInMap = roomToCheckInMapRepo.findByRoomNumber(roomNumber).orElseThrow(() -> new ApiException(NO_CHECK_IN_ATTACHED_TO_THIS_ROOM, HttpStatus.NOT_FOUND));
-        // check for existing cart
-        Optional<LaundryCart> laundryCartOptional = laundryCartRepo.findById(roomToCheckInMap.getId());
-        // create new cart when no cart is found
-        if(laundryCartOptional.isEmpty()){
-            laundryCartRepo.save(new LaundryCart(roomToCheckInMap.getId(), room.getRoomNumber(), cart.getItems().toString(), cart.getLaundryTotal()));
-        }else {
-            // update existing cart
-            try {
-
-                List<String> updatedItems = cart.getItems();
-                ObjectMapper mapper = new ObjectMapper();
-                List<ItemPojo> oldCartItem = mapper.readValue(laundryCartOptional.get().getItems(), TypeFactory.defaultInstance().constructCollectionType(List.class, ItemPojo.class));
-                for(ItemPojo itemPojo: oldCartItem){
-                    String itemStr = mapper.writeValueAsString(itemPojo);
-                    updatedItems.add(itemStr);
-                }
-                laundryCartOptional.get().setItems(updatedItems.toString());
-                laundryCartRepo.save(laundryCartOptional.get());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-
+        CheckIn checkIn = checkInRepo.findById(roomToCheckInMap.getId()).orElseThrow(() -> new ApiException(NO_CHECK_IN_ATTACHED_TO_THIS_ROOM, HttpStatus.NOT_FOUND));
+        LaundryCart laundryCart = new LaundryCart(room.getRoomNumber(), cart.getItems().toString(), cart.getLaundryTotal(), checkIn);
+        laundryCartRepo.save(laundryCart);
+        return String.valueOf(laundryCart.getId());
     }
     @Transactional
-    public void updateLaundryToCart(String roomNumber, LaundryCartPojo cart) {
-        Room room =roomRepo.findById(roomNumber).orElseThrow(() -> new ApiException(ROOM_NUMBER_DOES_NOT_EXIST, HttpStatus.NOT_FOUND));
-        // check for existing check in details
-        RoomToCheckInMap roomToCheckInMap = roomToCheckInMapRepo.findByRoomNumber(room.getRoomNumber()).orElseThrow(() -> new ApiException(NO_CHECK_IN_ATTACHED_TO_THIS_ROOM, HttpStatus.NOT_FOUND));
-        LaundryCart laundryCart = laundryCartRepo.findById(roomToCheckInMap.getId()).orElseThrow(()-> new ApiException("Laundry basket is empty", HttpStatus.NOT_FOUND));
-        laundryCartRepo.updateByItemsAndRoomNumber(cart.getItems().toString(),cart.getLaundryTotal(), laundryCart.getRoomNumber());
+    public void updateLaundryToCart( UUID laundryOrderId, LaundryCartPojo cart) {
+       LaundryCart laundryCart = laundryCartRepo.findById(laundryOrderId).orElseThrow(()-> new ApiException("Laundry basket is empty", HttpStatus.NOT_FOUND));
+       laundryCartRepo.updateByItemsAndRoomNumber(cart.getItems().toString(),cart.getLaundryTotal(), laundryCart.getRoomNumber());
     }
     public Optional<LaundryCart> getLaundryToCart(String roomNumber) {
         Room room =roomRepo.findById(roomNumber).orElseThrow(() -> new ApiException(ROOM_NUMBER_DOES_NOT_EXIST, HttpStatus.NOT_FOUND));

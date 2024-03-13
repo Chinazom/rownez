@@ -3,16 +3,17 @@ package com.scenic.rownezcoreservice.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "room_order")
+@Table(name = "Restaurant_order")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomOrder {
+public class RestaurantOrder {
 
     @Id
     @Column(name = "orderId",nullable = false)
@@ -27,22 +28,18 @@ public class RoomOrder {
 
     private double itemTotalPrice;
 
-    private String roomNumber;
+    private String tableNumber;
 
     private LocalDateTime orderCreationDate;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "checkIn_id")
-    private CheckIn checkIn;
 
-    public RoomOrder(long quantity, String itemName, double unitPrice, double itemTotalPrice,
-                     String roomNumber, LocalDateTime orderCreationDate, CheckIn checkInId) {
+    public RestaurantOrder(long quantity, String itemName, double unitPrice, double itemTotalPrice,
+                           String tableNumber, LocalDateTime orderCreationDate) {
         this.quantity = quantity;
         this.itemName = itemName;
         this.unitPrice = unitPrice;
         this.itemTotalPrice = itemTotalPrice;
-        this.roomNumber = roomNumber;
+        this.tableNumber = tableNumber;
         this.orderCreationDate = orderCreationDate;
-        this.checkIn = checkInId;
     }
 
     @PrePersist
