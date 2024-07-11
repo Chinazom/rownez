@@ -1,0 +1,12 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--Added the entity room-->
+    <changeSet id="202404071433" author="chinazom.nnoli">
+        <createTable tableName="restaurant_table">
+            <column name="table_name" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

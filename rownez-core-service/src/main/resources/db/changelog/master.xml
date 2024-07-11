@@ -9,4 +9,8 @@
     <include file="classpath:db/changelog/liquibase/food.changelog.xml"/>
     <include file="classpath:db/changelog/liquibase/drink.changelog.xml"/>
     <include file="classpath:db/changelog/liquibase/room-order-changelog.xml"/>
+    <include file="classpath:db/changelog/liquibase/restaurant-order-changelog.xml"/>
+    <include file="classpath:db/changelog/liquibase/init_table_number.xml"/>
+    <include file="classpath:db/changelog/liquibase/staff-changelog.xml"/>
+    <include file="classpath:db/changelog/liquibase/table_number_load.sql"/>
 </databaseChangeLog>

@@ -5,7 +5,7 @@ import com.scenic.rownezcoreservice.exception.ApiException;
 import com.scenic.rownezcoreservice.model.RoomCategory;
 import com.scenic.rownezcoreservice.model.RoomPOJO;
 import com.scenic.rownezcoreservice.repository.RoomRepo;
-import com.scenic.rownezcoreservice.service.GcpFileStorage;
+import com.scenic.rownezcoreservice.service.storage.GcpFileStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

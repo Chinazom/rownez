@@ -51,7 +51,7 @@ public class RoomOrderService {
         return orderIdList;
     }
 
-    public List<RoomOrder> getOrder(String roomNumber) {
+    public List<RoomOrder> getOrders(String roomNumber) {
         Room room = roomRepo.findById(roomNumber).orElseThrow(() -> new ApiException(ROOM_NUMBER_DOES_NOT_EXIST, HttpStatus.NOT_FOUND));
         // check for existing check in details
         RoomToCheckInMap roomToCheckInMap = roomToCheckInMapRepo.findByRoomNumber(room.getRoomNumber()).orElseThrow(() -> new ApiException(NO_CHECK_IN_ATTACHED_TO_THIS_ROOM, HttpStatus.NOT_FOUND));
@@ -73,5 +73,9 @@ public class RoomOrderService {
         List<RoomOrder> roomOrderList = roomOrderRepo.findByCheckInId(String.valueOf(roomToCheckInMap.getId()));
         roomOrderList.forEach(roomOrderRepo::delete);
         return true;
+    }
+
+    public List<RoomOrder> getOrderByIds(List<String> orderIds) {
+        return  roomOrderRepo.findAllByOrderIdIn(orderIds);
     }
 }

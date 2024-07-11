@@ -34,6 +34,9 @@ public class FoodService {
             if(food.isPresent()){
                 throw new ApiException("Food item already exist please",HttpStatus.BAD_REQUEST);
             }
+            if (foodDTO.getPrice() <=0 || foodDTO.getPrepTime() <= 0){
+                throw new ApiException("Food price or prep time can not be zero",HttpStatus.BAD_REQUEST);
+            }
             foodRepository.save(new Food(foodDTO.getName(), foodDTO.getPrice(),foodDTO.getCategory(),foodDTO.getPrepTime()));
         }
     }

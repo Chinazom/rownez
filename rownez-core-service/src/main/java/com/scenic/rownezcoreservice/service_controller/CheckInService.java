@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,6 +117,7 @@ public class CheckInService {
         roomToBeCleanedRepo.deleteAll();
         List<String> room = roomRepo.findByAvailability(false).stream().map(Room::getRoomNumber).toList();
         room.forEach(roomToBeCleaned -> roomToBeCleanedRepo.save(new RoomToBeCleaned(roomToBeCleaned)));
+        List<String> teste = new ArrayList<>();
     }
 
     public Iterable<RoomToBeCleaned> roomToBeCleaned() {

@@ -1,4 +1,4 @@
-package com.scenic.rownezcoreservice.service;
+package com.scenic.rownezcoreservice.service.storage;
 
 public class FileStorageServiceException extends Exception{
     public FileStorageServiceException (String message){

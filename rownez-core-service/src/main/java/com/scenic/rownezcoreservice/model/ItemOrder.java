@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemOrder {
+    long itemId;
     long quantity;
     String itemName;
     double itemUnitPrice;
     double itemTotalPrice;
+    MenuCategory category;
 
 }

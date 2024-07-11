@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/menu/order")
+@RequestMapping("/menu/order/room")
 @Tag(name = "Order Controller", description = "Endpoints for managing orders")
-public class OrderController {
+public class RoomOrderController {
 
     private final RoomOrderService roomOrderService;
 
     @Autowired
-    public OrderController(RoomOrderService roomOrderService) {
+    public RoomOrderController(RoomOrderService roomOrderService) {
         this.roomOrderService = roomOrderService;
     }
 
@@ -46,7 +46,7 @@ public class OrderController {
         }
     }
 
-    @Operation(summary = "Get an order by ID")
+    @Operation(summary = "Get an order by room number. this is used to fetch all order while checked in")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved order"),
             @ApiResponse(responseCode = "404", description = "Order not found"),
@@ -54,11 +54,27 @@ public class OrderController {
     })
     @GetMapping("/{roomNumber}")
     public ResponseEntity<List<RoomOrder>> getOrder(
-            @Parameter(description = "ID of the order to retrieve", required = true)
+            @Parameter(description = "room number", required = true)
             @PathVariable String roomNumber,
             @Parameter(description = "which category the order is coming from", required = true)
     @PathVariable OrderCategory category) {
-        List<RoomOrder> roomOrderList= roomOrderService.getOrder(roomNumber);
+        List<RoomOrder> roomOrderList= roomOrderService.getOrders(roomNumber);
+        if (roomOrderList != null) {
+            return ResponseEntity.ok(roomOrderList);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @Operation(summary = "Get an order by IDs")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved order"),
+            @ApiResponse(responseCode = "404", description = "Order not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/ids")
+    public ResponseEntity<List<RoomOrder>> getOrderById(
+            @Parameter(description = "ID of the order to retrieve", required = true)
+            @PathVariable List<String> orderIds) {
+        List<RoomOrder> roomOrderList= roomOrderService.getOrderByIds(orderIds);
         if (roomOrderList != null) {
             return ResponseEntity.ok(roomOrderList);
         }

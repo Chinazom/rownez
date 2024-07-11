@@ -1,4 +1,4 @@
-package com.scenic.rownezcoreservice.service;
+package com.scenic.rownezcoreservice.service.storage;
 
 import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.Blob;
