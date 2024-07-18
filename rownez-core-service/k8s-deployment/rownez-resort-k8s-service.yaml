@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rownez-resort-service
+  labels:
+    run: rownez-resort
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: rownez-resort
+  type: LoadBalancer
