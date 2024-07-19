@@ -44,6 +44,16 @@ public class StaffController {
     public ResponseEntity<List<Staff>> getStaffId(@RequestParam String firstName, @RequestParam String lastName) {
         return ResponseEntity.ok(onboardingAndoffBoarding.getStaffIdByName(firstName, lastName));
     }
+    @Operation(summary = "Get all Staff detail")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "successful"),
+            @ApiResponse(responseCode = "400", description = "Invalid request format"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping()
+    public ResponseEntity<List<Staff>> getAllStaff() {
+        return ResponseEntity.ok(onboardingAndoffBoarding.getAllStaff());
+    }
     @Operation(summary = "Delete Staff Info from the Database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Staff Info deleted successfully"),

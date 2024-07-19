@@ -63,6 +63,9 @@ public class StaffOnboardingAndOffBoarding {
     public List<Staff> getStaffIdByName(String firstName, String lastName) {
         return staffRepo.findByFirstNameAndLastName(firstName.toUpperCase(), lastName.toUpperCase());
     }
+    public List<Staff> getAllStaff() {
+        return staffRepo.findAll();
+    }
 
     @Transactional
     public void staffOffBoarding(String employeeId) {
