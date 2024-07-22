@@ -78,8 +78,5 @@ public class CheckInAndOutController {
         // Return the response with HTTP status 200 OK
         return new ResponseEntity<>(checkInService.roomToBeCleaned (), HttpStatus.OK);
     }
-    /*
-    * TODO
-    *   add check out api
-    *  add extend api*/
+
 }

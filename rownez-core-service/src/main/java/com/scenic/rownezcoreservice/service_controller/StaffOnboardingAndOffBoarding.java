@@ -7,6 +7,7 @@ import com.scenic.rownezcoreservice.model.EmailTemplateParameterMap;
 import com.scenic.rownezcoreservice.model.StaffDTO;
 import com.scenic.rownezcoreservice.repository.StaffRepo;
 import com.scenic.rownezcoreservice.service.email.EmailServiceInterface;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,8 @@ import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class StaffOnboardingAndOffBoarding {
@@ -40,6 +43,14 @@ public class StaffOnboardingAndOffBoarding {
         }
         //todo check if the name, email and mobile num is valid. throw error for invalid ones.
         // check if email address  or phone number already exist
+        if (!EmailValidator.getInstance().isValid(staffDTO.getEmail())){ // checks for invalid email address
+            throw new ApiException("Invalid email address", HttpStatus.BAD_REQUEST);
+        }
+
+        if ( !Pattern.compile("^\\d{11}$").matcher(staffDTO.getPhone()).matches()) {//validate mobile number check if it contains only 11 digits
+            throw new ApiException("Invalid mobile number", HttpStatus.BAD_REQUEST);
+        }
+
         Optional<Staff> existStaff = staffRepo.findByEmailOrPhone(staffDTO.getEmail(), staffDTO.getPhone());
         if (existStaff.isPresent()){
             throw new ApiException("Two staff members cannot have same phone number or email", HttpStatus.BAD_REQUEST);

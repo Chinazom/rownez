@@ -2,13 +2,13 @@ package com.scenic.rownezcoreservice.service.email;
 
 import com.google.api.client.util.Value;
 import com.scenic.rownezcoreservice.model.EmailTemplateParam;
-import com.scenic.rownezcoreservice.model.EmailTemplateParameterMap;
 import com.scenic.rownezcoreservice.model.EmailTemplateType;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 @Service
@@ -26,8 +26,8 @@ import java.util.Map;
 public class SendGridEmailService implements EmailServiceInterface {
     @Value ("${app.sendgrid.api.key}")
     String sendGridApiKey;
-    String emailId = "edyzena@yahoo.co.uk";
-    private static  final Map <EmailTemplateType, String> EMAIL_TEMPLATE_TYPE_ID = new HashMap<>();
+    String emailId = "chinazom_nnoli@edysphere.xyz";
+    private static  final Map <EmailTemplateType, String> EMAIL_TEMPLATE_TYPE_ID = new EnumMap<>(EmailTemplateType.class);;
     private static final Logger logger = LoggerFactory.getLogger(SendGridEmailService.class);
     static {
         EMAIL_TEMPLATE_TYPE_ID.put(EmailTemplateType.STAFF_ON_BOARDING,"d-829bfbfc3bcb4f7ba1b7b670290a4b8e");
@@ -45,7 +45,7 @@ public class SendGridEmailService implements EmailServiceInterface {
     }
 
     private boolean send(Mail mail) throws IOException {
-        SendGrid sg = new SendGrid("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");
+        SendGrid sg = new SendGrid(sendGridApiKey);
         Request request = new Request();
         request.setMethod(Method.POST);
         request.setEndpoint("mail/send");
