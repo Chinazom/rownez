@@ -1,7 +1,7 @@
 package com.scenic.rownezcoreservice.entity;
 
 import com.scenic.rownezcoreservice.model.MenuCategory;
-import com.scenic.rownezcoreservice.orderState.OrderState;
+import com.scenic.rownezcoreservice.order.state.OrderState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

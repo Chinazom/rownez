@@ -1,6 +1,7 @@
 package com.scenic.rownezcoreservice.service.email;
 
 import com.google.api.client.util.Value;
+import com.scenic.rownezcoreservice.exception.ApiException;
 import com.scenic.rownezcoreservice.model.EmailTemplateParam;
 import com.scenic.rownezcoreservice.model.EmailTemplateType;
 import com.sendgrid.Method;
@@ -8,7 +9,6 @@ import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
 import org.slf4j.Logger;
@@ -24,10 +24,10 @@ import java.util.Map;
 @Service
 @ConditionalOnProperty(name = "app.service.email", havingValue = "sendgrid")
 public class SendGridEmailService implements EmailServiceInterface {
-    @Value ("${app.sendgrid.api.key}")
+    @Value ("${app.sendgrid.key}")
     String sendGridApiKey;
     String emailId = "chinazom_nnoli@edysphere.xyz";
-    private static  final Map <EmailTemplateType, String> EMAIL_TEMPLATE_TYPE_ID = new EnumMap<>(EmailTemplateType.class);;
+    private static  final Map <EmailTemplateType, String> EMAIL_TEMPLATE_TYPE_ID = new EnumMap<>(EmailTemplateType.class);
     private static final Logger logger = LoggerFactory.getLogger(SendGridEmailService.class);
     static {
         EMAIL_TEMPLATE_TYPE_ID.put(EmailTemplateType.STAFF_ON_BOARDING,"d-829bfbfc3bcb4f7ba1b7b670290a4b8e");
@@ -39,7 +39,7 @@ public class SendGridEmailService implements EmailServiceInterface {
         try {
             return send(mail);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ApiException(e.getMessage());
         }
 
     }

@@ -10,6 +10,6 @@ import java.util.UUID;
 @Repository
 public interface RoomOrderRepo extends JpaRepository<RoomOrder, UUID> {
     List<RoomOrder> findByCheckInId (String checkIn);
-    List<RoomOrder> findAllByOrderIdIn (List<String> orderList);
+    List<RoomOrder> findAllByOrderIdIn (List<UUID> orderList);
 }
 

@@ -16,6 +16,11 @@ public class DummyMessageService implements MessageServiceInterface{
     }
 
     @Override
+    public boolean sendMessage(String messageJson) {
+        return false;
+    }
+
+    @Override
     public void readMessage() {
 
     }

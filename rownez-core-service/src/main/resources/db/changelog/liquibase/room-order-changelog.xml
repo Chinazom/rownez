@@ -24,6 +24,12 @@
             <column name="room_number" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_state" type="varchar">
+                <constraints nullable="false"/>
+            </column>
             <column name="order_creation_date" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>

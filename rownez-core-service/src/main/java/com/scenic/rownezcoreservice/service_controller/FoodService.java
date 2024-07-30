@@ -25,6 +25,7 @@ public class FoodService {
         this.foodRepository = foodRepository;
     }
 
+    @Transactional
     public void addFoodList(List<FoodDTO> foodDTOList) {
         if (foodDTOList == null){
             throw new ApiException("Food menu cannot be empty", HttpStatus.BAD_REQUEST);

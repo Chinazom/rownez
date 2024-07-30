@@ -3,6 +3,7 @@ package com.scenic.rownezcoreservice.controller;
 import com.scenic.rownezcoreservice.entity.RoomOrder;
 import com.scenic.rownezcoreservice.model.OrderCategory;
 import com.scenic.rownezcoreservice.model.OrderRequestDTO;
+import com.scenic.rownezcoreservice.model.OrderStatusDTO;
 import com.scenic.rownezcoreservice.service_controller.RoomOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,10 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/menu/order/room")
-@Tag(name = "Order Controller", description = "Endpoints for managing orders")
+@Tag(name = "Room Order Controller", description = "Endpoints for managing orders")
 public class RoomOrderController {
 
     private final RoomOrderService roomOrderService;
@@ -55,9 +57,7 @@ public class RoomOrderController {
     @GetMapping("/{roomNumber}")
     public ResponseEntity<List<RoomOrder>> getOrder(
             @Parameter(description = "room number", required = true)
-            @PathVariable String roomNumber,
-            @Parameter(description = "which category the order is coming from", required = true)
-    @PathVariable OrderCategory category) {
+            @PathVariable String roomNumber) {
         List<RoomOrder> roomOrderList= roomOrderService.getOrders(roomNumber);
         if (roomOrderList != null) {
             return ResponseEntity.ok(roomOrderList);
@@ -73,7 +73,7 @@ public class RoomOrderController {
     @GetMapping("/ids")
     public ResponseEntity<List<RoomOrder>> getOrderById(
             @Parameter(description = "ID of the order to retrieve", required = true)
-            @PathVariable List<String> orderIds) {
+            @PathVariable List<UUID> orderIds) {
         List<RoomOrder> roomOrderList= roomOrderService.getOrderByIds(orderIds);
         if (roomOrderList != null) {
             return ResponseEntity.ok(roomOrderList);
@@ -89,7 +89,7 @@ public class RoomOrderController {
     })
     @PutMapping()
     public ResponseEntity<String> updateOrder(
-            @RequestParam List<String> orderIds,
+            @RequestParam List<UUID> orderIds,
             @RequestBody OrderRequestDTO orderRequestDTO) {
         boolean updated = roomOrderService.updateOrder(orderRequestDTO,orderIds);
         if (updated) {
@@ -109,11 +109,24 @@ public class RoomOrderController {
             @Parameter(description = "Room number of the order to delete", required = true)
             @PathVariable String roomNumber, @Parameter(description = "which category the order is coming from", required = true)
     @PathVariable OrderCategory category) {
-        boolean deleted = roomOrderService.deleteOrder(roomNumber);
+        boolean deleted = roomOrderService.cancelOrder(roomNumber);
         if (deleted) {
             return ResponseEntity.ok("Order deleted successfully");
         }
         return ResponseEntity.notFound().build();
+    }
+    @Operation(summary = "Update status of room order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Room order updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request format"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PutMapping("/update-status")
+    public ResponseEntity<String> updateOrderStatus(
+            @Parameter(description = "Request body containing order update status details")
+            @RequestBody List<OrderStatusDTO> orderStatusDTOS) {
+        roomOrderService.updateOrderStatus(orderStatusDTOS);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Order status updated successfully");
     }
 }
 

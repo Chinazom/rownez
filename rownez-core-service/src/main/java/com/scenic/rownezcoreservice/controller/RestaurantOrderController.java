@@ -1,6 +1,7 @@
 package com.scenic.rownezcoreservice.controller;
 
 import com.scenic.rownezcoreservice.entity.RestaurantOrder;
+import com.scenic.rownezcoreservice.model.OrderStatusDTO;
 import com.scenic.rownezcoreservice.model.RestaurantOrderDTO;
 import com.scenic.rownezcoreservice.service_controller.RestaurantOrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,10 +10,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -58,6 +61,37 @@ public class RestaurantOrderController {
         }
         return ResponseEntity.notFound().build();
     }
+    @Operation(summary = "get restaurant order for a certain duration.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved order"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Order not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("")
+    public ResponseEntity<List<RestaurantOrder>> getOrderByDate(
+            @Parameter(description = "start")
+            @RequestParam(value = "start sample entry 2024-07-01T13:11:40.020747+01:00", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+            @Parameter(description = "date to", required = false)
+            @RequestParam(value = "to sample entry 2024-07-30T13:11:40.020747+01:00", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+        List<RestaurantOrder> restaurantOrders = restaurantOrderService.getOrdersByDate(from, to);
+        if (restaurantOrders != null) {
+            return ResponseEntity.ok(restaurantOrders);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @Operation(summary = "get restaurant order by state.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved order"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Order not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/kitchen-order")
+    public ResponseEntity<List<RestaurantOrder>> sendKitchenOrder() {
+        List<RestaurantOrder> restaurantOrders = restaurantOrderService.sendKitchenOrder();
+        return ResponseEntity.ok(restaurantOrders);
+    }
     @Operation(summary = "Get all order by staff id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved order"),
@@ -68,8 +102,12 @@ public class RestaurantOrderController {
     @GetMapping("/staff")
     public ResponseEntity<List<RestaurantOrder>> getOrderByStaff(
             @Parameter(description = "Staff Id number", required = true)
-            @RequestParam String staffId) {
-        List<RestaurantOrder> restaurantOrders = restaurantOrderService.getOrdersByStaff(staffId);
+            @RequestParam String staffId,
+            @Parameter(description = "start")
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+            @Parameter(description = "to")
+            @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+        List<RestaurantOrder> restaurantOrders = restaurantOrderService.getOrdersByStaff(staffId, from, to);
         if (restaurantOrders != null) {
             return ResponseEntity.ok(restaurantOrders);
         }
@@ -129,6 +167,19 @@ public class RestaurantOrderController {
             return ResponseEntity.ok("Order updated for table "+ restaurantOrderDTO.getTableNumber());
         }
         return ResponseEntity.notFound().build();
+    }
+    @Operation(summary = "Update status of order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Order updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request format"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PutMapping("/update-status")
+    public ResponseEntity<String> updateOrderStatus(
+            @Parameter(description = "Request body containing order update status details")
+            @RequestBody List<OrderStatusDTO> orderStatusDTOS) {
+        restaurantOrderService.updateOrderStatus(orderStatusDTOS);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Order status updated successfully");
     }
 }
 

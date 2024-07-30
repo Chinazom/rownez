@@ -4,42 +4,39 @@ import com.scenic.rownezcoreservice.entity.RestaurantOrder;
 import com.scenic.rownezcoreservice.entity.Staff;
 import com.scenic.rownezcoreservice.exception.ApiException;
 import com.scenic.rownezcoreservice.model.ItemOrder;
+import com.scenic.rownezcoreservice.model.OrderStatusDTO;
 import com.scenic.rownezcoreservice.model.RestaurantOrderDTO;
-import com.scenic.rownezcoreservice.model.StaffRole;
-import com.scenic.rownezcoreservice.orderState.OrderEvent;
-import com.scenic.rownezcoreservice.orderState.OrderState;
+import com.scenic.rownezcoreservice.order.state.OrderEvent;
+import com.scenic.rownezcoreservice.order.state.OrderState;
 import com.scenic.rownezcoreservice.repository.*;
 import com.scenic.rownezcoreservice.service.message.MessageServiceInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class RestaurantOrderService {
     private static final String INVALID_STAFF_ID = "Invalid Staff Id ";
+    private static final String INVALID_FROM_TO_DATE = "Invalid from and to date ";
     private static final String INVALID_TABLE_NUMBER = "Table number is invalid";
     private static final String STAFF_ORDER_EXCEPTION = "Only one Staff can handle table Order";
     private final RestaurantOrderRepo restaurantOrderRepo;
     private final RestaurantTableRepo restaurantTableRepo;
     private final StaffRepo staffRepo;
     private final MessageServiceInterface messageServiceInterface;
-    @Autowired
-    private StateMachine<OrderState, OrderEvent> stateMachine;
+    private final StateMachine<OrderState, OrderEvent> stateMachine;
 
-    public RestaurantOrderService(RestaurantOrderRepo restaurantOrderRepo, RestaurantTableRepo restaurantTableRepo, StaffRepo staffRepo, MessageServiceInterface messageServiceInterface) {
+    public RestaurantOrderService(RestaurantOrderRepo restaurantOrderRepo, RestaurantTableRepo restaurantTableRepo, StaffRepo staffRepo, MessageServiceInterface messageServiceInterface, StateMachine<OrderState, OrderEvent> stateMachine) {
         this.restaurantOrderRepo = restaurantOrderRepo;
         this.restaurantTableRepo = restaurantTableRepo;
         this.staffRepo = staffRepo;
         this.messageServiceInterface = messageServiceInterface;
+        this.stateMachine = stateMachine;
+        this.stateMachine.start();
     }
 
     /**Todo state transition not yet fully implemented
@@ -76,19 +73,29 @@ public class RestaurantOrderService {
                     LocalDateTime.now(), false, food.getItemId(),food.getCategory(), restaurantOrderDTO.getEmployeeId(), OrderState.PENDING);
             restaurantOrderRepo.save(restaurantOrder);
         }
-        //todo change the message signature to contain message content
-        messageServiceInterface.readMessage();
     }
 
     public List<RestaurantOrder> getOrdersByTableNotPaid(String tableNumber, String staffId) {
         validateRequestParam(staffId,tableNumber);
         return restaurantOrderRepo.findByTableNumberAndStaffIdAndPaid(tableNumber, staffId, false);
     }
-    public List<RestaurantOrder> getOrdersByStaff(String staffId) {
+    public List<RestaurantOrder> getOrdersByStaff(String staffId, LocalDateTime from, LocalDateTime to) {
         if ( staffId == null ||staffId.isBlank() ){
             throw new ApiException(INVALID_STAFF_ID, HttpStatus.BAD_REQUEST);
         }
+        if ((from == null && to != null) || (from != null && to == null)){
+            throw new ApiException(INVALID_FROM_TO_DATE, HttpStatus.BAD_REQUEST);
+        }
+        if (from != null && to != null){
+            return restaurantOrderRepo.findByStaffIdAndOrderCreationDateBetween(staffId,from,to);
+        }
         return restaurantOrderRepo.findByStaffId(staffId);
+    }
+    public List<RestaurantOrder> getOrdersByDate( LocalDateTime from, LocalDateTime to) {
+        if ((from == null && to != null) || (from != null && to == null)){
+            throw new ApiException(INVALID_FROM_TO_DATE, HttpStatus.BAD_REQUEST);
+        }
+        return restaurantOrderRepo.findAllByOrderCreationDateBetween(from,to);
     }
     public boolean orderPaid (String staffId, String tableNumber ){
         validateRequestParam(staffId, tableNumber);
@@ -101,7 +108,6 @@ public class RestaurantOrderService {
     }
 
     @Transactional
-
     public boolean updateOrder(RestaurantOrderDTO restaurantOrderDTO) {
         if (restaurantOrderDTO == null || restaurantOrderDTO.getEmployeeId() == null ||
                 restaurantOrderDTO.getEmployeeId().isBlank() || restaurantOrderDTO.getOrderList().isEmpty()){
@@ -136,8 +142,12 @@ public class RestaurantOrderService {
             if (restaurantOrder1.getOrderState() == OrderState.PROCESSING || restaurantOrder1.getOrderState() == OrderState.COMPLETED){
                 throw new ApiException("Order cannot be canceled", HttpStatus.CONFLICT);
             }
+            if(!stateMachine.sendEvent(OrderEvent.CANCEL)){
+                throw new ApiException("Order cannot be cancelled", HttpStatus.CONFLICT);
+            }
+            restaurantOrder1.setOrderState(stateMachine.getState().getId());
+            restaurantOrderRepo.delete(restaurantOrder1);
         });
-        restaurantOrder.forEach(restaurantOrderRepo::delete);
         return true;
     }
 
@@ -161,7 +171,7 @@ public class RestaurantOrderService {
     private List<ItemOrder> getPreviousOrder (List<RestaurantOrder> restaurantOrderList){
         List<ItemOrder> itemOrderList = new ArrayList<>();
         restaurantOrderList.forEach(restaurantOrder -> {
-            if (restaurantOrder.getOrderState() != OrderState.PROCESSING || restaurantOrder.getOrderState() != OrderState.COMPLETED) {
+            if (restaurantOrder.getOrderState() != OrderState.PROCESSING || restaurantOrder.getOrderState() != OrderState.COMPLETED|| restaurantOrder.getOrderState() != OrderState.CANCELED) {
                 itemOrderList.add(new ItemOrder(restaurantOrder.getItemId(), restaurantOrder.getQuantity(), restaurantOrder.getItemName(), restaurantOrder.getUnitPrice(),
                         restaurantOrder.getItemTotalPrice(), restaurantOrder.getCategory()));
             }else {
@@ -176,5 +186,21 @@ public class RestaurantOrderService {
                 .toList();
     }
 
-
+    public List<RestaurantOrder> sendKitchenOrder() {
+        return restaurantOrderRepo.findByOrderState(OrderState.PENDING);
+    }
+    //todo consider if it is necessary to make the update status @transactional
+    public void updateOrderStatus(List<OrderStatusDTO> orderStatusDTO) {
+        List<RestaurantOrder> restaurantOrders = restaurantOrderRepo.findAllByOrderIdIn(orderStatusDTO.stream().map(OrderStatusDTO::getOrderId).toList());
+        for (OrderStatusDTO orderDto : orderStatusDTO) {
+            RestaurantOrder order = restaurantOrders.stream()
+                    .filter(order1 -> order1.getOrderId().equals(orderDto.getOrderId()))
+                    .findAny().orElseThrow(() -> new ApiException("The Order Id does not exist", HttpStatus.NOT_FOUND));
+            if(!stateMachine.sendEvent(orderDto.getStatus())){
+                throw new ApiException("Status update to " +orderDto.getStatus() +" is not allowed", HttpStatus.CONFLICT);
+            }
+            order.setOrderState(stateMachine.getState().getId());
+            restaurantOrderRepo.save(order);
+        }
+    }
 }
