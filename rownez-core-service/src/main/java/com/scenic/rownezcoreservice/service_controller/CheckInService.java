@@ -1,20 +1,24 @@
 package com.scenic.rownezcoreservice.service_controller;
 
-import com.scenic.rownezcoreservice.entity.*;
+import com.scenic.rownezcoreservice.entity.CheckIn;
+import com.scenic.rownezcoreservice.entity.Room;
+import com.scenic.rownezcoreservice.entity.RoomToCheckInMap;
+import com.scenic.rownezcoreservice.entity.Staff;
 import com.scenic.rownezcoreservice.exception.ApiException;
 import com.scenic.rownezcoreservice.model.CheckInRequestDTO;
-import com.scenic.rownezcoreservice.repository.*;
+import com.scenic.rownezcoreservice.repository.CheckInRepo;
+import com.scenic.rownezcoreservice.repository.RoomRepo;
+import com.scenic.rownezcoreservice.repository.RoomToCheckInMapRepo;
+import com.scenic.rownezcoreservice.repository.StaffRepo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -27,7 +31,6 @@ public class CheckInService {
     private final RoomRepo roomRepo;
     private final StaffRepo staffRepo;
     private final CheckInRepo checkInRepo;
-    private final RoomToBeCleanedRepo roomToBeCleanedRepo;
     private final RoomToCheckInMapRepo roomToCheckInMapRepo;
     private static final String ERROR_MSG_INVALID_ROOM_NUMBER = "Invalid room number";
     private static final String CHECK_IN_DETAILS_NOT_FOUND = "Checking details not found";
@@ -120,19 +123,5 @@ public class CheckInService {
         extension.setNumOfNight(extension.getNumOfNight() + numOfDay);
         extension.setAmountPaid(extension.getAmountPaid() + amountForExtendedNight);
         checkInRepo.save(extension);
-    }
-
-    // update the rooms to be cleaned
-   // @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0/20 * * * *")
-    protected void setRoomsToBeCleaned (){
-        logger.info("Fetching room to be cleaned");
-        roomToBeCleanedRepo.deleteAll();
-        List<String> room = roomRepo.findByAvailability(false).stream().map(Room::getRoomNumber).toList();
-        room.forEach(roomToBeCleaned -> roomToBeCleanedRepo.save(new RoomToBeCleaned(roomToBeCleaned)));
-    }
-
-    public Iterable<RoomToBeCleaned> roomToBeCleaned() {
-        return roomToBeCleanedRepo.findAll();
     }
 }

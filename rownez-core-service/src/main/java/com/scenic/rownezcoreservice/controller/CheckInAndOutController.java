@@ -65,18 +65,6 @@ public class CheckInAndOutController {
         // Return the response with HTTP status 200 OK
         return new ResponseEntity<>("Extension successfully", HttpStatus.CREATED);
     }
-    @Operation(summary = "Use this API to fetch rooms tobe cleaned ",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "check in created successfully"),
-                    @ApiResponse(responseCode = "400", description = "bad request"),
-                    @ApiResponse(responseCode = "403", description = "Forbidden"),
-                    @ApiResponse(responseCode = "404", description = "not found"),
-                    @ApiResponse(responseCode = "500", description = "internal server error"),
-            })
-    @GetMapping("/room-to-be-cleaned")
-    public ResponseEntity<Iterable<RoomToBeCleaned>> getListOfRoomTobeCleaned() {
-        // Return the response with HTTP status 200 OK
-        return new ResponseEntity<>(checkInService.roomToBeCleaned (), HttpStatus.OK);
-    }
+
 
 }
