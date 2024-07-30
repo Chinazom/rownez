@@ -79,7 +79,7 @@ public class StaffOnboardingAndOffBoarding {
 
     @Transactional
     public void staffOffBoarding(String employeeId) {
-        staffRepo.findById(employeeId);
+        staffRepo.deleteById(employeeId);
     }
     public boolean updateStaffInfo (String id, StaffDTO staffDTO) throws ApiException{
         Optional<Staff> staff = staffRepo.findById(id);
