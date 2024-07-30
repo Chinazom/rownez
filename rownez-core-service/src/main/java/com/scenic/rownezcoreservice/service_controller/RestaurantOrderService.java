@@ -8,33 +8,35 @@ import com.scenic.rownezcoreservice.model.OrderStatusDTO;
 import com.scenic.rownezcoreservice.model.RestaurantOrderDTO;
 import com.scenic.rownezcoreservice.order.state.OrderEvent;
 import com.scenic.rownezcoreservice.order.state.OrderState;
-import com.scenic.rownezcoreservice.repository.*;
-import com.scenic.rownezcoreservice.service.message.MessageServiceInterface;
+import com.scenic.rownezcoreservice.repository.RestaurantOrderRepo;
+import com.scenic.rownezcoreservice.repository.RestaurantTableRepo;
+import com.scenic.rownezcoreservice.repository.StaffRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class RestaurantOrderService {
-    private static final String INVALID_STAFF_ID = "Invalid Staff Id ";
+    public static final String INVALID_STAFF_ID = "Invalid Staff Id ";
     private static final String INVALID_FROM_TO_DATE = "Invalid from and to date ";
     private static final String INVALID_TABLE_NUMBER = "Table number is invalid";
     private static final String STAFF_ORDER_EXCEPTION = "Only one Staff can handle table Order";
     private final RestaurantOrderRepo restaurantOrderRepo;
     private final RestaurantTableRepo restaurantTableRepo;
     private final StaffRepo staffRepo;
-    private final MessageServiceInterface messageServiceInterface;
     private final StateMachine<OrderState, OrderEvent> stateMachine;
 
-    public RestaurantOrderService(RestaurantOrderRepo restaurantOrderRepo, RestaurantTableRepo restaurantTableRepo, StaffRepo staffRepo, MessageServiceInterface messageServiceInterface, StateMachine<OrderState, OrderEvent> stateMachine) {
+    public RestaurantOrderService(RestaurantOrderRepo restaurantOrderRepo, RestaurantTableRepo restaurantTableRepo, StaffRepo staffRepo, StateMachine<OrderState, OrderEvent> stateMachine) {
         this.restaurantOrderRepo = restaurantOrderRepo;
         this.restaurantTableRepo = restaurantTableRepo;
         this.staffRepo = staffRepo;
-        this.messageServiceInterface = messageServiceInterface;
         this.stateMachine = stateMachine;
         this.stateMachine.start();
     }
@@ -150,7 +152,6 @@ public class RestaurantOrderService {
         });
         return true;
     }
-
     private void validateRequestParam(String staffId, String tableNumber) {
         if ( staffId == null || staffId.isBlank() ){
             throw new ApiException(INVALID_STAFF_ID, HttpStatus.BAD_REQUEST);

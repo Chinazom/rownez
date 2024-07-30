@@ -82,5 +82,7 @@ public class StaffController {
         }
         return ResponseEntity.notFound().build();
     }
+    // todo have an api to correct failed transactions such as orders status, check out not handled and
+    //  other things that should be done when the is a failure in the system
 }
 

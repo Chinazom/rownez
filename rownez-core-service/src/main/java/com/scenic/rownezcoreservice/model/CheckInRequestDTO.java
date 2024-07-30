@@ -1,7 +1,6 @@
 package com.scenic.rownezcoreservice.model;
 
 
-import com.scenic.rownezcoreservice.entity.Room;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +17,6 @@ public class CheckInRequestDTO {
     private String email;
     private int numberOfGuests;
     private int numberOfNight;
-    private String receptionistNameCheckIn;
+    private String staffId;
     private double amountPaid;
 }
